@@ -5,6 +5,7 @@ def finding_bit_prob_error(total_p):
     p = 1 - ((total_p/4) ** (1. / 3))
     print(p)
     return p
+
 finding_bit_prob_error(.996)
 
 def channel(half_byte):
