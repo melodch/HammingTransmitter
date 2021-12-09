@@ -4,7 +4,7 @@ from PIL import Image
 
 def convert_message_to_codeword(message, generator_mat):
     """
-    Convert a 4-bit message into an 8-bit codeword.
+    Convert a 4-bit message into an 7-bit codeword.
     """
     return np.matmul(message, generator_mat)
 
