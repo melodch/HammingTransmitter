@@ -65,7 +65,7 @@ for _ in range(num_half_bytes):
     og_bit = rand_key(4)
     error_bit = channel(og_bit, finding_bit_prob_error(0.996))
     num_errors += check_error(og_bit, error_bit)
-    # print("Original bit: ", og_bit, " Error bit: ", error_bit)
+    print("Original bit: ", og_bit, " Error bit: ", error_bit)
 print("Number of bits with an error: ", num_errors, "for ", num_half_bytes)
 
 
