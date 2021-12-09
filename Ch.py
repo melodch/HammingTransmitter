@@ -7,6 +7,7 @@ def finding_bit_prob_error(total_p):
     p = 1 - 0.97372
     return p
 
+finding_bit_prob_error(.996)
 
 def channel(half_byte, bit_prop_error):
     """ Use probability to indroduce one error
