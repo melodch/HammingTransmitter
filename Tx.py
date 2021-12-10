@@ -4,7 +4,7 @@ from PIL import Image
 
 def convert_message_to_codeword(message, generator_mat):
     """
-    Convert a 4-bit message into an 8-bit codeword.
+    Convert a 4-bit message into an 7-bit codeword.
     """
     return np.matmul(message, generator_mat)
 
@@ -25,13 +25,24 @@ def calculate_syndrome(codeword, parity_check_mat):
         syndrome[i] = syndrome[i] % 2
     return syndrome
 
-im = Image.open('tcp.png')
-img = im.load()
+def image_to_pixels(imgname):
+    im = Image.open(imgname)
+    img = im.load()
+    width, height = im.size
+    output_matrix = [[0 for j in range(width)] for i in range(height)]
+    for i in range(height):
+        for j in range(width):
+            current = img[j,i]
+            red = int_to_list(current[0])
+            green = int_to_list(current[1])
+            blue = int_to_list(current[2])
+            output_matrix[i][j] = [red[:4], red[4:], green[:4], green[4:], blue[:4], blue[4:]]
+    
+    return output_matrix
 
-print('before')
-print(img[500,600])
-img[500,600] = (0,0,0)
-print('after')
-print(img[500,600])
-# does this update? 
-im.save('tcp_updated.png')  # Save the modified pixels as .png
+def int_to_list(num):
+    return list(format(num,'08b'))
+    
+
+out = image_to_pixels('icon.jpg')
+
