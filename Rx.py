@@ -1,6 +1,7 @@
 from os import error
 import numpy as np
 
+
 def calculate_syndrome(codeword, parity_check_mat):
     """
     Calculate syndrome of given codeword.
@@ -22,3 +23,6 @@ def fix_error(codeword, syndrome):
     # Correct the bit in codeword at error position
     codeword[error_pos-1] = (codeword[error_pos-1] + 1) % 2
     return codeword
+
+def convert_codeword_to_message(codeword, generator_mat):
+    pass
