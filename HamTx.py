@@ -7,8 +7,7 @@ def convert_message_to_codeword(message, generator_mat):
     Convert a 4-bit message into an 7-bit codeword.
     """
     codeword = np.matmul(message, generator_mat)
-    for i in range(len(codeword)):
-        codeword[i] = codeword[i] % 2
+    codeword = codeword % 2
     return codeword
 
 def insert_error_to_codeword(codeword, error_index):
@@ -18,15 +17,6 @@ def insert_error_to_codeword(codeword, error_index):
     error_index -= 1
     codeword[error_index] = (codeword[error_index] + 1) % 2
     return codeword
-
-def calculate_syndrome(codeword, parity_check_mat):
-    """
-    Calculate syndrome of given codeword.
-    """
-    syndrome = np.matmul(codeword,np.transpose(parity_check_mat))
-    for i in range(len(syndrome)):
-        syndrome[i] = syndrome[i] % 2
-    return syndrome
 
 def image_to_pixels(imgname):
     im = Image.open(imgname)

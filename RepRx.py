@@ -1,3 +1,5 @@
+import numpy as np
+
 def fix_error(codeword, deg_repetition):
     """
     Fix error by iterating through codeword and flipping minority bit.
@@ -13,11 +15,11 @@ def fix_error(codeword, deg_repetition):
             fixed_codeword += [0]*deg_repetition
         else:
             fixed_codeword += [1]*deg_repetition
-    return fixed_codeword
+    return np.asarray_chkfinite(fixed_codeword)
 
 def convert_codeword_to_message(codeword, deg_repetition):
     message = []
     groups = int(len(codeword)/deg_repetition)
     for i in range(groups):
         message.append(codeword[i*deg_repetition])
-    return message
+    return np.asarray_chkfinite(message)

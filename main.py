@@ -27,10 +27,12 @@ print("H: ", H)
 messages = [[0,0,0,1],
             [0,1,0,1],
             [1,0,0,1],
+            [1,1,0,1],
+            [1,0,0,0],
             [1,0,1,1]]
 
 # HAMMING
-decode_time_taken = []
+ham_decode_time_taken = []
 for message in messages:
     # Encode
     message = np.asarray_chkfinite(message)
@@ -45,21 +47,21 @@ for message in messages:
 
     # Decode
     initial_t = time.time()
-    syndrome = HamRx.calculate_syndrome(codeword, H)
-    print(syndrome, " "*8, "syndrome")
-    codeword = HamRx.fix_error(codeword, syndrome)
+    codeword = HamRx.fix_error(codeword, H)
     print(codeword, " codeword with fix")
     message = HamRx.convert_codeword_to_message(codeword)
     print(message, " "*6, "message\n")
-    decode_time_taken.append(time.time() - initial_t)
-print("Average time taken to decode with hamming(7,4): ", sum(decode_time_taken)/len(decode_time_taken), "\n")
+    ham_decode_time_taken.append(time.time() - initial_t)
+ham_average_time_taken = sum(ham_decode_time_taken)/len(ham_decode_time_taken)
+print("Average time taken to decode with hamming(7,4): ", ham_average_time_taken, "\n")
 
 # REPETITION
-decode_time_taken = []
+rep_decode_time_taken = []
 deg_repetition = 3
 for message in messages:
     # Encode
-    print(message, " "*24, "message")
+    message = np.asarray_chkfinite(message)
+    print(message, " "*16, "message")
     codeword = RepTx.convert_message_to_codeword(message, deg_repetition)
     print(codeword, " codeword")
 
@@ -72,6 +74,12 @@ for message in messages:
     codeword = RepRx.fix_error(codeword, deg_repetition)
     print(codeword, " codeword with fix")
     message = RepRx.convert_codeword_to_message(codeword, deg_repetition)
-    print(message, " message\n")
-    decode_time_taken.append(time.time() - initial_t)
-print("Average time taken to decode with repition(3): ", sum(decode_time_taken)/len(decode_time_taken))
+    print(message, " "*16, "message\n")
+    rep_decode_time_taken.append(time.time() - initial_t)
+rep_average_time_taken = sum(rep_decode_time_taken)/len(rep_decode_time_taken)
+print("Average time taken to decode with repition(3): ", rep_average_time_taken, "\n")
+
+if ham_average_time_taken < rep_average_time_taken:
+    print("Decoding with hamming code faster than repetition code by", rep_average_time_taken-ham_average_time_taken, "seconds")
+else:
+    print("rep faster")

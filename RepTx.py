@@ -1,9 +1,11 @@
+import numpy as np
+
 def convert_message_to_codeword(message, deg_repetition):
     codeword = []
     for digit in message:
         for _ in range(deg_repetition):
             codeword.append(digit)
-    return codeword
+    return np.asarray_chkfinite(codeword)
 
 def insert_error_to_codeword(codeword, error_index):
     """
