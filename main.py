@@ -1,7 +1,7 @@
 import numpy as np
 import time
-import Tx
-import Rx
+import HamTx
+import HamRx
 import RepTx
 import RepRx
 
@@ -24,50 +24,54 @@ print("G: ", G)
 print("H: ", H)
 # print(np.matmul(G,np.transpose(H)))
 
+messages = [[0,0,0,1],
+            [0,1,0,1],
+            [1,0,0,1],
+            [1,0,1,1]]
+
 # HAMMING
 decode_time_taken = []
-for i in range(7):
+for message in messages:
     # Encode
-    message = np.asarray_chkfinite([0,0,0,1])
+    message = np.asarray_chkfinite(message)
     print(message, " "*6, "message")
-    codeword = Tx.convert_message_to_codeword(message, G)
+    codeword = HamTx.convert_message_to_codeword(message, G)
     print(codeword, " codeword")
 
     # Insert error
-    error_pose = i+1
-    codeword = Tx.insert_error_to_codeword(codeword, error_pose)
+    error_pose = 2
+    codeword = HamTx.insert_error_to_codeword(codeword, error_pose)
     print(codeword, " codeword with error at position", error_pose)
 
     # Decode
     initial_t = time.time()
-    syndrome = Rx.calculate_syndrome(codeword, H)
+    syndrome = HamRx.calculate_syndrome(codeword, H)
     print(syndrome, " "*8, "syndrome")
-    codeword = Rx.fix_error(codeword, syndrome)
-    print(codeword, " codeword with fix\n")
-    # message = Rx.convert_codeword_to_message(codeword, G)
-    # print(message, " message\n")
+    codeword = HamRx.fix_error(codeword, syndrome)
+    print(codeword, " codeword with fix")
+    message = HamRx.convert_codeword_to_message(codeword)
+    print(message, " "*6, "message\n")
     decode_time_taken.append(time.time() - initial_t)
-print("Average time taken to decode with hamming(7,4): ", sum(decode_time_taken)/len(decode_time_taken))
+print("Average time taken to decode with hamming(7,4): ", sum(decode_time_taken)/len(decode_time_taken), "\n")
 
 # REPETITION
-# decode_time_taken = []
-# deg_repetition = 3
-# for i in range(7):
-#     # Encode
-#     message = np.asarray_chkfinite([0,0,0,1])
-#     print(message, " "*27, "message")
-#     codeword = RepTx.convert_message_to_codeword(message, deg_repetition)
-#     print(codeword, " codeword")
+decode_time_taken = []
+deg_repetition = 3
+for message in messages:
+    # Encode
+    print(message, " "*24, "message")
+    codeword = RepTx.convert_message_to_codeword(message, deg_repetition)
+    print(codeword, " codeword")
 
-#     # Insert error
-#     error_pose = i+1
-#     codeword = RepTx.insert_error_to_codeword(codeword, error_pose)
-#     print(codeword, " codeword with error at position", error_pose)
+    # Insert error
+    codeword = RepTx.insert_error_to_codeword(codeword, error_pose)
+    print(codeword, " codeword with error at position", error_pose)
+
     # Decode
-    # initial_t = time.time()
-    # syndrome = RepRx.calculate_syndrome(codeword, H)
-    # print(syndrome, " "*8, "syndrome")
-    # codeword = RepRx.fix_error(codeword, syndrome)
-    # print(codeword, " codeword with fix\n")
-    # decode_time_taken.append(time.time() - initial_t)
-# print("Average time taken to decode with repition(3): ", sum(decode_time_taken)/len(decode_time_taken))
+    initial_t = time.time()
+    codeword = RepRx.fix_error(codeword, deg_repetition)
+    print(codeword, " codeword with fix")
+    message = RepRx.convert_codeword_to_message(codeword, deg_repetition)
+    print(message, " message\n")
+    decode_time_taken.append(time.time() - initial_t)
+print("Average time taken to decode with repition(3): ", sum(decode_time_taken)/len(decode_time_taken))
