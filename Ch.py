@@ -50,7 +50,7 @@ def check_error(og_bit, error_bit):
 num_errors = 0
 num_seven_bits = 200
 for _ in range(num_seven_bits):
-    og_bit = rand_key(7)
+    og_bit = rand_key(4)
     error_bit = channel(og_bit, finding_bit_prob_error())
     num_errors += check_error(og_bit, error_bit)
     print("Original bit: ", og_bit, " Error bit: ", error_bit)
