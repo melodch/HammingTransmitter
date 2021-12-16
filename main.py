@@ -93,9 +93,11 @@ for i in range(len(image_matrix)):
         for k in range(6):
             #print(image_matrix[i][j][k])
             image_matrix[i][j][k] = HamTx.convert_message_to_codeword(image_matrix[i][j][k],G)
-            print(image_matrix[i][j][k])
+            print('1: ', image_matrix[i][j][k])
             image_matrix[i][j][k] = Ch.channel(image_matrix[i][j][k], prop)
-            print(image_matrix[i][j][k])
+            print('2: ', image_matrix[i][j][k])
+            image_matrix[i][j][k] = HamRx.fix_error(image_matrix[i][j][k],H)
+            print('3: ', image_matrix[i][j][k])
 
 #print(image_matrix)
 
