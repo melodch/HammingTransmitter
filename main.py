@@ -144,7 +144,7 @@ def transfer_image_without_hamming(prop, image_name):
     img.save(new_name)
 
 prop = 1 - 0.97854
-image_name = 'octo.jpg'
+image_name = 'assets/olin.jpg'
 
 transfer_image_with_hamming(prop,image_name)
 transfer_image_without_hamming(prop,image_name)
