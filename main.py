@@ -34,6 +34,81 @@ messages = [[0,0,0,1],
             [1,0,0,0],
             [1,0,1,1]]
 
+def transfer_image_with_hamming(prop,image_name):
+    image_matrix = HamTx.image_to_pixels(image_name)
+    for i in range(len(image_matrix)):
+        for j in range(len(image_matrix[0])):
+            for k in range(6):
+                #print(image_matrix[i][j][k])
+                image_matrix[i][j][k] = HamTx.convert_message_to_codeword(image_matrix[i][j][k],G)
+                #print('1: ', image_matrix[i][j][k])
+                image_matrix[i][j][k] = Ch.channel(image_matrix[i][j][k], prop)
+                #print('2: ', image_matrix[i][j][k])
+                image_matrix[i][j][k] = HamRx.fix_error(image_matrix[i][j][k],H)
+                #print('3: ', image_matrix[i][j][k])
+                image_matrix[i][j][k] = HamRx.convert_codeword_to_message(image_matrix[i][j][k])
+                #print('4: ', image_matrix[i][j][k])
+
+    for i in range(len(image_matrix)):
+        for j in range(len(image_matrix[0])):
+            redlist = list(image_matrix[i][j][0]) + list(image_matrix[i][j][1])
+            redstr = "".join([str(elem) for elem in redlist])
+            red = int(redstr,2)
+
+            greenlist = list(image_matrix[i][j][2]) + list(image_matrix[i][j][3])
+            greenstr = "".join([str(elem) for elem in greenlist])
+            green = int(greenstr,2)
+
+            bluelist = list(image_matrix[i][j][4]) + list(image_matrix[i][j][5])
+            bluestr = "".join([str(elem) for elem in bluelist])
+            blue = int(bluestr,2)
+
+            image_matrix[i][j] = (red,green,blue)
+            #print(image_matrix[i][j])
+
+    img = Image.new('RGB', (len(image_matrix[0]), len(image_matrix)), color = 'red')
+
+    for i in range(len(image_matrix)):
+        for j in range(len(image_matrix[0])):
+            img.putpixel((j,i),image_matrix[i][j])
+
+    new_name = image_name + "_hamming" + "_prop_" + str(prop)[:5] + '.png'
+    img.save(new_name)
+
+def transfer_image_without_hamming(prop, image_name):
+    image_matrix = HamTx.image_to_pixels(image_name)
+    for i in range(len(image_matrix)):
+        for j in range(len(image_matrix[0])):
+            for k in range(6):
+                image_matrix[i][j][k] = Ch.channel(image_matrix[i][j][k], prop)
+
+    for i in range(len(image_matrix)):
+        for j in range(len(image_matrix[0])):
+            redlist = list(image_matrix[i][j][0]) + list(image_matrix[i][j][1])
+            redstr = "".join([str(elem) for elem in redlist])
+            red = int(redstr,2)
+
+            greenlist = list(image_matrix[i][j][2]) + list(image_matrix[i][j][3])
+            greenstr = "".join([str(elem) for elem in greenlist])
+            green = int(greenstr,2)
+
+            bluelist = list(image_matrix[i][j][4]) + list(image_matrix[i][j][5])
+            bluestr = "".join([str(elem) for elem in bluelist])
+            blue = int(bluestr,2)
+
+            image_matrix[i][j] = (red,green,blue)
+            #print(image_matrix[i][j])
+
+    img = Image.new('RGB', (len(image_matrix[0]), len(image_matrix)), color = 'red')
+
+    for i in range(len(image_matrix)):
+        for j in range(len(image_matrix[0])):
+            img.putpixel((j,i),image_matrix[i][j])
+
+    new_name = image_name + "_no_hamming" + "_prop_" + str(prop)[:5] + '.png'
+    img.save(new_name)
+
+
 # # HAMMING
 # ham_decode_time_taken = []
 # for message in messages:
@@ -86,53 +161,11 @@ messages = [[0,0,0,1],
 #     print("Decoding with hamming code faster than repetition code by", rep_average_time_taken-ham_average_time_taken, "seconds")
 # else:
 #     print("rep faster")
+
+
 prop = 1 - 0.97854
-image_name = 'tcp.png'
+image_name = 'olin.jpg'
 
-image_matrix = HamTx.image_to_pixels(image_name)
-for i in range(len(image_matrix)):
-    for j in range(len(image_matrix[0])):
-        for k in range(6):
-            #print(image_matrix[i][j][k])
-            image_matrix[i][j][k] = HamTx.convert_message_to_codeword(image_matrix[i][j][k],G)
-            #print('1: ', image_matrix[i][j][k])
-            image_matrix[i][j][k] = Ch.channel(image_matrix[i][j][k], prop)
-            #print('2: ', image_matrix[i][j][k])
-            image_matrix[i][j][k] = HamRx.fix_error(image_matrix[i][j][k],H)
-            #print('3: ', image_matrix[i][j][k])
-            image_matrix[i][j][k] = HamRx.convert_codeword_to_message(image_matrix[i][j][k])
-            #print('4: ', image_matrix[i][j][k])
-
-for i in range(len(image_matrix)):
-    for j in range(len(image_matrix[0])):
-        redlist = list(image_matrix[i][j][0]) + list(image_matrix[i][j][1])
-        redstr = "".join([str(elem) for elem in redlist])
-        red = int(redstr,2)
-
-        greenlist = list(image_matrix[i][j][2]) + list(image_matrix[i][j][3])
-        greenstr = "".join([str(elem) for elem in greenlist])
-        green = int(greenstr,2)
-
-        bluelist = list(image_matrix[i][j][4]) + list(image_matrix[i][j][5])
-        bluestr = "".join([str(elem) for elem in bluelist])
-        blue = int(bluestr,2)
-
-        image_matrix[i][j] = (red,green,blue)
-        #print(image_matrix[i][j])
-
-img = Image.new('RGB', (len(image_matrix[0]), len(image_matrix)), color = 'red')
-
-for i in range(len(image_matrix)):
-    for j in range(len(image_matrix[0])):
-        img.putpixel((j,i),image_matrix[i][j])
-
-new_name_hamming = image_name + "_hamming" + '.png'
-img.save(new_name_hamming)
-
-        
-
-        
-
-#print(image_matrix)
-
+transfer_image_with_hamming(prop,image_name)
+transfer_image_without_hamming(prop,image_name)
 
