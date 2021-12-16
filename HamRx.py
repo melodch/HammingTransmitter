@@ -8,9 +8,11 @@ def fix_error(codeword, parity_check_mat):
     syndrome = np.matmul(codeword,np.transpose(parity_check_mat))
     # Convert error position from binary to decimal
     error_pos = sum((val%2)*(2**idx) for idx, val in enumerate(reversed(syndrome)))
-    # Flip bit in codeword at error position
-    codeword[error_pos-1] = (codeword[error_pos-1] + 1) % 2
-    return codeword
+    if error_pos == 0: return codeword
+    else:
+        # Flip bit in codeword at error position
+        codeword[error_pos-1] = (codeword[error_pos-1] + 1) % 2
+        return codeword
 
 def convert_codeword_to_message(codeword):
     """
