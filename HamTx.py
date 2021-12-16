@@ -34,8 +34,8 @@ def image_to_pixels(imgname):
     return output_matrix
 
 def int_to_list(num):
-    return list(format(num,'08b'))
+    return list(map(int,list(format(num,'08b'))))
     
 
-out = image_to_pixels('icon.jpg')
+
 
