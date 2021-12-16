@@ -1,4 +1,3 @@
-# image
 import numpy as np
 from PIL import Image
 
@@ -19,6 +18,10 @@ def insert_error_to_codeword(codeword, error_index):
     return codeword
 
 def image_to_pixels(imgname):
+    """
+    Convert image files to triple nested list with pixel color data saved as 4 bit list.
+    Each pixel's RGB is represented as total of 6 list with length 4.
+    """
     im = Image.open(imgname)
     img = im.load()
     width, height = im.size
@@ -34,6 +37,9 @@ def image_to_pixels(imgname):
     return output_matrix
 
 def int_to_list(num):
+    """
+    Change integer to length 8 list with bit information
+    """
     return list(map(int,list(format(num,'08b'))))
     
 
