@@ -1,8 +1,7 @@
 import numpy as np
 import random
 
-
-def finding_bit_prob_error(total_p):
+def finding_bit_prob_error(p_total):
     """Finding bit probability error given we want 1 error in 4 bits
         Look at prob_math.jpg"""
     p = 1 - 0.97854
